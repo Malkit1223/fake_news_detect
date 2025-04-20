@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FakeNews Detective</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Slider animation styles */
+    .slide-hidden {
+      display: none;
+      opacity: 0;
+    }
+    .slide-visible {
+      display: block;
+      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    /* 3D Card Rotating Effect */
+    .card-container {
+      perspective: 1000px;
+    }
+    .card {
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .card:hover {
+      transform: rotateY(180deg);
+    }
+    .card-front,
+    .card-back {
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Accordion Styling */
+    .accordion-content {
+      display: none;
+      transition: max-height 0.3s ease-out;
+      overflow: hidden;
+    }
+    .accordion-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-2">
+          <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2" />
+          </svg>
+          <span class="font-bold text-xl text-gray-800">FakeNews Detective</span>
+        </a>
+        
+        <!-- Links -->
+        <div class="flex space-x-8 text-gray-600">
+          <a href="/" class="hover:text-blue-600">Home</a>
+          <a href="/prediction" class="hover:text-blue-600">Predict</a>
+          
+          <a href="/contact" class="hover:text-blue-600">Contact</a>
+          <a href="/about" class="hover:text-blue-600">About</a>
+          
+ 
+          {% if user %}
+          <span class="text-gray-700">{{ user.name }}</span>
+          <a href="/logout" class="text-blue-600 hover:underline">Logout</a>
+      {% else %}
+          <a href="/login" class="text-blue-600 hover:underline">Login</a>
+          <a href="/signup" class="text-blue-600 hover:underline">Signup</a>
+      {% endif %}
+        
+        </div>
+        
+      </div>
+      
+    </div>
+  </nav>
+
+  <!-- Hero Section with Slider -->
+  <div class="relative h-[75vh] bg-gray-200">
+    <div class="absolute inset-0 overflow-hidden">
+      <div id="slider" class="relative w-full h-full">
+        <!-- Slide 1 -->
+        <div class="absolute inset-0 slide-visible">
+          <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1920&q=80"
+            alt="Stay Informed" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center z-10">
+            <div class="text-center text-white">
+              <h1 class="text-5xl font-bold mb-4">Stay Informed</h1>
+              <p class="text-lg mb-8">Get accurate news verification in seconds</p>
+              <a href="/prediction"
+                class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition">
+                Try It Now
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="absolute inset-0 slide-hidden">
+          <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1920&q=80"
+            alt="AI-Powered Detection" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center z-10">
+            <div class="text-center text-white">
+              <h1 class="text-5xl font-bold mb-4">AI-Powered Detection</h1>
+              <p class="text-lg mb-8">Advanced algorithms for reliable results</p>
+              <a href="/about"
+                class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition">
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="absolute inset-0 slide-hidden">
+          <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1920&q=80"
+            alt="Fight Misinformation" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-center justify-center z-10">
+            <div class="text-center text-white">
+              <h1 class="text-5xl font-bold mb-4">Fight Misinformation</h1>
+              <p class="text-lg mb-8">Join us in promoting truth in media</p>
+              <a href="/contact"
+                class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition">
+                Get Involved
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider Controls -->
+      <button id="prevSlide" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full z-30 hover:bg-opacity-75 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-gray-700">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="nextSlide" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full z-30 hover:bg-opacity-75 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 text-gray-700">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">Our Features</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="card-container relative w-full ">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-gray-100 shadow-lg flex flex-col items-center justify-center p-6 rounded-lg  ">
+              <img src="static\FakeNewsWeb.jpg"
+                alt="Accurate Predictions" class="rounded-t-lg mb-4">
+              <h3 class="text-2xl font-semibold mb-2">Accurate Predictions</h3>
+              <p class="text-gray-600"></p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Why it’s accurate?</h3>
+              <p class="text-lg">Our system uses advanced AI and cross-references reliable sources for precision.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="card-container relative w-full h-72">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-gray-100 shadow-lg flex flex-col items-center justify-center p-6 rounded-lg">
+              <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80"
+                alt="Real-time Analysis" class="rounded-t-lg mb-4">
+              <h3 class="text-2xl font-semibold mb-2">Real-time Analysis</h3>
+              <p class="text-gray-600"></p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">How it works?</h3>
+              <p class="text-lg">Our AI processes news content in real-time to ensure swift results.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 3 -->
+        <div class="card-container relative w-full h-72">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-gray-100 shadow-lg flex flex-col items-center justify-center p-6 rounded-lg">
+              <img src="static\Free Photo _ Concentrated call center agent talking with a customer while working in the office.jpeg"
+                alt="24/7 Support" class="rounded-t-lg mb-4">
+              <h3 class="text-2xl font-semibold mb-2">24/7 Support</h3>
+              <p class="text-gray-600"></p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Always here for you</h3>
+              <p class="text-lg">No matter the time, we’re ready to provide assistance and guidance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accordion Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">FAQs</h2>
+      <div class="space-y-4">
+        <!-- Accordion Item 1 -->
+        <div class="p-4 bg-white rounded-lg shadow">
+          <button class="w-full text-left font-bold text-lg accordion-button">
+            What is FakeNews Detective?
+          </button>
+          <p class="mt-2 text-gray-600 accordion-content">FakeNews Detective is a platform designed to detect misinformation using AI.</p>
+        </div>
+        <!-- Accordion Item 2 -->
+        <div class="p-4 bg-white rounded-lg shadow">
+          <button class="w-full text-left font-bold text-lg accordion-button">
+            How does the AI work?
+          </button>
+          <p class="mt-2 text-gray-600 accordion-content">Our AI analyzes content patterns, cross-references reliable sources, and identifies fake news.</p>
+        </div>
+        <!-- Accordion Item 3 -->
+        <div class="p-4 bg-white rounded-lg shadow">
+          <button class="w-full text-left font-bold text-lg accordion-button">
+            Is the service free to use?
+          </button>
+          <p class="mt-2 text-gray-600 accordion-content">We offer both free and premium plans to cater to all user needs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-gray-900 text-white py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p>&copy; 2025 FakeNews Detective. All rights reserved.</p>
+      <!-- Social Media Links -->
+      <div class="flex justify-center space-x-6 mt-4">
+        <!-- Facebook -->
+        <a href="https://www.facebook.com" target="_blank" class="text-white hover:text-blue-500 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6">
+            <path d="M12 2.04c5.52 0 9.96 4.44 9.96 9.96 0 5.5-4.44 9.96-9.96 9.96-5.52 0-9.96-4.46-9.96-9.96 0-5.52 4.44-9.96 9.96-9.96zM10.95 14.74v-6.28h2.1c.16 0 .34.14.34.31v2.44c0 .17-.18.31-.34.31h-2.1v3.28h-2.99v-6.28h2.99v-2.2c0-3.09 1.85-4.79 4.53-4.79 1.32 0 2.42.1 2.75.18v2.99h-1.82c-1.47 0-1.75.7-1.75 1.74v2.25h3.25l-.52 2.85h-2.73v6.28h2.99c.17 0 .31.14.31.31v2.11c0 .17-.14.31-.31.31h-2.99c0 .13-.03.25-.09.36-.11.18-.26.33-.44.47-.16.12-.35.21-.54.31-.32.16-.66.3-1.01.44-.41.17-.83.33-1.26.47-.41.14-.83.28-1.24.41-.45.14-.91.27-1.37.39-.35.1-.7.18-1.06.27-.47.12-.95.24-1.43.35-.13.03-.27.06-.41.09z"/>
+          </svg>
+        </a>
+  
+        <!-- Instagram -->
+        <a href="https://www.instagram.com" target="_blank" class="text-white hover:text-pink-500 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6">
+            <path d="M12 2.04c5.52 0 9.96 4.44 9.96 9.96 0 5.5-4.44 9.96-9.96 9.96-5.52 0-9.96-4.46-9.96-9.96 0-5.52 4.44-9.96 9.96-9.96zM8.92 7.35c0-1.25 1.02-2.27 2.27-2.27 1.25 0 2.27 1.02 2.27 2.27 0 1.25-1.02 2.27-2.27 2.27-1.25 0-2.27-1.02-2.27-2.27zM6.88 10.23h3.75v2.66h-3.75v2.79c0 2.38 1.96 4.32 4.37 4.32 2.41 0 4.37-1.94 4.37-4.32v-2.79h-2.66v-2.66h2.66v-2.27c0-2.41-1.96-4.37-4.37-4.37-1.28 0-2.43.51-3.3 1.35-.87-.24-1.8-.36-2.73-.36-3.21 0-5.87 2.65-5.87 5.87v2.66h3.75v2.66h-3.75v2.79z"/>
+          </svg>
+        </a>
+  
+        <!-- Twitter (Optional) -->
+        <a href="https://www.twitter.com" target="_blank" class="text-white hover:text-blue-400 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6">
+            <path d="M23.44 4.85c-.84.37-1.75.62-2.71.73.97-.58 1.72-1.5 2.07-2.59-.91.54-1.9.93-2.96 1.14-.86-.92-2.1-1.5-3.48-1.5-3.42 0-6.2 3.17-5.86 6.58-4.66-.23-8.79-2.46-11.58-5.86-1.57 2.7-.83 6.2 1.63 7.97-1.22-.04-2.38-.37-3.38-.92v.09c.03 2.98 2.1 5.58 4.98 6.17-1.65 1.32-3.74 1.68-5.56 1.1 1.64 1.03 3.6 1.63 5.68 1.63 6.81 0 10.52-5.64 10.52-10.52l-.01-.48c.72-.52 1.33-1.16 1.88-1.88z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- JavaScript -->
+  <script>
+    // Slider Logic
+    const slides = document.querySelectorAll("#slider > div");
+    const nextButton = document.getElementById("nextSlide");
+    const prevButton = document.getElementById("prevSlide");
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("slide-visible", i === index);
+        slide.classList.toggle("slide-hidden", i !== index);
+      });
+    }
+
+    nextButton.addEventListener("click", () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    });
+
+    prevButton.addEventListener("click", () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    });
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }, 5000);
+
+    // Accordion Logic
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+    accordionButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const content = button.nextElementSibling;
+        content.classList.toggle("active");
+      });
+    });
+  </script>
+
+</body>
+</html>

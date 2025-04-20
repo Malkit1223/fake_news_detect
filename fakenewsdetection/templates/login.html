@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login to DeeNews</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-r from-blue-50 to-purple-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+  <!-- Header -->
+  <div class="sm:mx-auto sm:w-full sm:max-w-md animate-fadeIn">
+    <div class="flex justify-center">
+      <svg class="h-16 w-16 text-blue-600 transform hover:rotate-12 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2" />
+      </svg>
+    </div>
+    <h2 class="mt-6 text-center text-4xl font-extrabold text-gray-900">
+      Login to DeeNews
+    </h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Welcome back! Sign in to continue.
+    </p>
+  </div>
+
+  <!-- Login Form -->
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fadeIn">
+    <div class="bg-white py-8 px-6 shadow-lg rounded-xl sm:px-10 transform hover:scale-105 transition-transform duration-300">
+      <form class="space-y-6" action="/login" method="POST">
+        <!-- Email Input -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+          <div class="mt-1">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              required
+              class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <div class="mt-1">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              required
+              class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+            />
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+
+      <!-- Flashed Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mt-4 text-red-500">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} p-2 rounded-lg text-sm">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Signup Link -->
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+          Don’t have an account?
+          <a href="/signup" class="font-medium text-blue-600 hover:text-blue-500 transition duration-300">
+            Sign Up
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

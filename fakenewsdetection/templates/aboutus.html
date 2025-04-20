@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - FakeNews Detective</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+  <style>
+    /* 3D Carousel Styles */
+    .splide__slide {
+      transform: scale(0.8);
+      opacity: 0.5;
+      transition: all 0.5s ease;
+    }
+    .splide__slide.is-active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* 3D Card Rotating Effect */
+    .card-container {
+      perspective: 1000px;
+    }
+    .card {
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .card:hover {
+      transform: rotateY(180deg);
+    }
+    .card-front,
+    .card-back {
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Hero Section Background Image */
+    .hero-section {
+      background-image: url('static/mission.jpeg'); /* Replace with your image path */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <a href="/" class="flex items-center space-x-2">
+          <svg class="h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2" />
+          </svg>
+          <span class="font-bold text-xl text-gray-800">FakeNews Detective</span>
+        </a>
+        
+        <!-- Links -->
+        <div class="flex space-x-8 text-gray-600">
+          <a href="/" class="hover:text-blue-600">Home</a>
+          <a href="/prediction" class="hover:text-blue-600">Predict</a>
+         
+          <a href="/contact" class="hover:text-blue-600">Contact</a>
+          <a href="/about" class="hover:text-blue-600">About</a>
+            
+      
+ 
+          {% if user %}
+          <span class="text-gray-700">{{ user.name }}</span>
+          <a href="/logout" class="text-blue-600 hover:underline">Logout</a>
+      {% else %}
+          <a href="/login" class="text-blue-600 hover:underline">Login</a>
+          <a href="/signup" class="text-blue-600 hover:underline">Signup</a>
+      {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Background Image -->
+  <div class="relative h-[50vh] flex items-center justify-center hero-section">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative z-10 text-center text-white">
+      <h1 class="text-5xl font-bold mb-4">About Us</h1>
+      <p class="text-lg">Learn more about our mission and team.</p>
+    </div>
+  </div>
+
+  <!-- About Content Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">Who We Are</h2>
+      <p class="text-lg text-gray-600 text-center max-w-2xl mx-auto mb-12">
+        Welcome to FakeNews Detective, your trusted companion in the fight against misinformation. Our mission is to empower individuals and organizations to identify fake news and promote the spread of reliable information.
+      </p>
+
+      <!-- 3D Carousel -->
+      <div class="splide">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <!-- Slide 1 -->
+            <li class="splide__slide">
+              <div class="bg-gray-100 p-8 rounded-lg shadow-lg">
+                <img src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=800&q=80"
+                  alt="Our Team" class="rounded-t-lg mb-4">
+                <h3 class="text-2xl font-semibold mb-2">Our Team</h3>
+                <p class="text-gray-600">Meet the passionate team behind FakeNews Detective.</p>
+              </div>
+            </li>
+            <!-- Slide 2 -->
+            <li class="splide__slide">
+              <div class="bg-gray-100 p-8 rounded-lg shadow-lg">
+                <img src="static/mission.jpeg"
+                  alt="Our Mission" class="rounded-t-lg mb-4">
+                <h3 class="text-2xl font-semibold mb-2">Our Mission</h3>
+                <p class="text-gray-600">We aim to create a world where truth prevails.</p>
+              </div>
+            </li>
+            <!-- Slide 3 -->
+            <li class="splide__slide">
+              <div class="bg-gray-100 p-8 rounded-lg shadow-lg">
+                <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80"
+                  alt="Our Technology" class="rounded-t-lg mb-4">
+                <h3 class="text-2xl font-semibold mb-2">Our Technology</h3>
+                <p class="text-gray-600">Cutting-edge AI for reliable results.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-gray-900 text-center mb-8">Our Values</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div class="card-container relative w-full h-72">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-white shadow-lg flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Transparency</h3>
+              <p class="text-gray-600">We believe in open and honest communication.</p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Why Transparency?</h3>
+              <p class="text-lg">It builds trust and ensures accountability.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 2 -->
+        <div class="card-container relative w-full h-72">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-white shadow-lg flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Innovation</h3>
+              <p class="text-gray-600">We constantly innovate to stay ahead.</p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Why Innovation?</h3>
+              <p class="text-lg">It drives progress and improves accuracy.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 3 -->
+        <div class="card-container relative w-full h-72">
+          <div class="card w-full h-full relative">
+            <!-- Front -->
+            <div class="card-front bg-white shadow-lg flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Community</h3>
+              <p class="text-gray-600">We value our users and their feedback.</p>
+            </div>
+            <!-- Back -->
+            <div class="card-back bg-blue-600 text-white flex flex-col items-center justify-center p-6 rounded-lg">
+              <h3 class="text-2xl font-semibold mb-2">Why Community?</h3>
+              <p class="text-lg">It helps us grow and improve together.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <p>&copy; 2025 FakeNews Detective. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Splide JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <script>
+    new Splide('.splide', {
+      type: 'loop',
+      perPage: 3,
+      focus: 'center',
+      gap: '2rem',
+      autoplay: true,
+      pauseOnHover: false,
+      interval: 3000,
+      breakpoints: {
+        768: {
+          perPage: 1,
+        },
+      },
+    }).mount();
+  </script>
+</body>
+</html>
